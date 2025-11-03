@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>🧪 Gherkin Test Case Generator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 Buat Test Case Otomatis</h1>
+    <p>Masukkan deskripsi fitur → dapatkan Gherkin → langsung ke ClickUp!</p>
+
+    <form id="generateForm">
+      <textarea id="feature" placeholder="Contoh: Login dengan OTP, Reset password via email, Upload file PDF, dll..." rows="4" required></textarea>
+      <button type="submit">🚀 Buat Test Case</button>
+    </form>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    document.getElementById('generateForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const feature = document.getElementById('feature').value.trim();
+      const btn = e.target.querySelector('button');
+      const resultDiv = document.getElementById('result');
+      
+      if (!feature) return;
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Sedang proses...';
+      resultDiv.innerHTML = '';
+
+      try {
+        const res = await fetch('/generate', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({feature})
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          resultDiv.innerHTML = `
+            <h3>✅ Berhasil!</h3>
+            <pre>${data.gherkin}</pre>
+            <p><a href="${data.clickup_url}" target="_blank" style="color:#4f46e5;text-decoration:underline;">🔗 Lihat di ClickUp</a></p>
+          `;
+        } else {
+          resultDiv.innerHTML = `<p style="color:red">❌ Error: ${data.error || 'Terjadi kesalahan'}</p>`;
+        }
+      } catch (err) {
+        resultDiv.innerHTML = `<p style="color:red">❌ Jaringan error: ${err.message}</p>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🚀 Buat Test Case';
+      }
+    });
+  </script>
+</body>
+</html>
