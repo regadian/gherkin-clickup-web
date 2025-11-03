@@ -12,7 +12,7 @@ APP_VERSION = os.getenv("APP_VERSION", "")
 CUSTOM_FIELD_ID_VERSI = os.getenv("CLICKUP_CUSTOM_FIELD_VERSI", "")
 
 def generate_gherkin(desc: str) -> str:
-    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
+    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.0-pro:generateContent?key={GEMINI_API_KEY}"
     
     prompt = f"""
 Buat SATU test case dalam format Gherkin (Bahasa Indonesia) untuk fitur: {desc}
@@ -100,3 +100,4 @@ def generate():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
