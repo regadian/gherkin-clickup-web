@@ -10,9 +10,10 @@ def home():
 
 @app.route("/generate", methods=["POST"])
 def generate():
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    OPENAI_API_KEY = os.getenv("MY_OPENAI_KEY")
     return jsonify({"test": "OK"})
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
